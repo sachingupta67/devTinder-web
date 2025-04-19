@@ -213,7 +213,25 @@ eg: FE => http://16.16.183.51/
     - sudo systemctl restart nginx  
 
   # If we refresh page it says 404 Non found
-  -
+  - for SPA 
+    ```
+    location / {
+       
+       try_files $uri $uri/ =404;
+    }
+    ```
+
+  - update this : 
+
+  ```
+    location / {
+       
+       try_files $uri /index.html; # replaced $uri/ =404 to /index.html
+    }
+    ```
+   => CTRL+X , Y ,ENTER
+   - Restrat nginx
+     - sudo systemctl restart nginx
 
   # Imp = FE & BE has same domain right then 
     const BASE_URL = "/api"  it will take automatically 
