@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { BASE_URL } from "./Login"
 const Profile = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -9,12 +9,12 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/profile/view', {
-          withCredentials: true
+        const response = await axios.get(`${BASE_URL}/profile/view`, {
+          withCredentials: true,
         });
         setProfile(response.data.data);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch profile');
+        setError(err.response?.data?.message || "Failed to fetch profile");
       } finally {
         setLoading(false);
       }
@@ -43,13 +43,13 @@ const Profile = () => {
     <div className="min-h-screen bg-gray-50 py-8 px-4">
       <div className="max-w-3xl mx-auto bg-white rounded-lg shadow p-6">
         <h1 className="text-3xl font-bold mb-6">Profile</h1>
-        
+
         {profile && (
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
-              <img 
-                src={profile.photoUrl} 
-                alt="Profile" 
+              <img
+                src={profile.photoUrl}
+                alt="Profile"
                 className="w-24 h-24 rounded-full object-cover"
               />
               <div>
@@ -81,7 +81,7 @@ const Profile = () => {
                 <h3 className="text-xl font-semibold mb-2">Skills</h3>
                 <div className="flex flex-wrap gap-2">
                   {profile.skills.map((skill, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
                     >
@@ -93,7 +93,9 @@ const Profile = () => {
             )}
 
             <div className="mt-6 text-sm text-gray-500">
-              <p>Member since: {new Date(profile.createdAt).toLocaleDateString()}</p>
+              <p>
+                Member since: {new Date(profile.createdAt).toLocaleDateString()}
+              </p>
             </div>
           </div>
         )}

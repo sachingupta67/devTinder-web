@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+export const BASE_URL = 'http://16.16.183.51/api'
+// export const BASE_URL = "http://localhost:8080";
 const Login = () => {
-    const navigate=useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "sachin.gupta@gmail.com",
     password: "Scooby28@",
@@ -27,7 +28,7 @@ const Login = () => {
     try {
       const response = await axios({
         method: "POST",
-        url: "http://localhost:8080/login",
+        url: `${BASE_URL}/login`,
         data: {
           emailId: formData.email,
           password: formData.password,
@@ -38,7 +39,7 @@ const Login = () => {
       // Handle successful login
       //   localStorage.setItem("token", response.data.token);
       console.log("Login successful:", response.data);
-     return navigate("/profile");
+      return navigate("/profile");
       // Redirect to a protected route or perform any other necessary actions
       // For example, you can redirect the user to a dashboard or profile page
       // using the history object or a routing librar

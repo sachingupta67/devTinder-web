@@ -140,3 +140,74 @@ Solution : we need to run this into background
   - how to monitor => pm2 monit
   - how to stop all => pm2 stop all
   - how to delete all => pm2 delete all
+
+
+# Proxy Pass
+eg: FE => http://16.16.183.51/  
+    BE => http://16.16.183.51:8080
+    Expacation [BE] => http://16.16.183.51:api 
+
+    In Actual Work
+    FE => www.abc.com 
+    BE => www.abc.com:8080 [BAD]
+    Correct => www.abc.com/api 
+
+    Will use for that proxy pass
+    - Nginx will take care of it 
+    - we have to update config file of nginx
+
+    ```
+     server {
+    listen 80;
+    server_name www.abc.com;
+
+    # Frontend
+    location / {
+        root /var/www/frontend;  # replace with actual build path
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Backend (proxied to Express API)
+    location /api/ {
+        proxy_pass http://localhost:8080/; # or 127.0.0.1 if running locally
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+
+        # CORS support if needed
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Credentials true;
+    }
+}
+
+
+    ```
+
+
+# How to edit nginx config on server
+- root access should be for edit 
+- sudo nano /etc/nginx/sites-available/default
+- update server name 
+   eg:[if not having domain]-16.16.183.51
+      [if having domain] -www.abc.com
+   server_name www.abc.com;
+- below the server_name will add another rule =>
+  location /api/ {
+        proxy_pass http://localhost:8080/; # or 127.0.0.1 if running locally
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+
+        # CORS support if needed
+        add_header Access-Control-Allow-Origin *;
+        add_header Access-Control-Allow-Credentials true;
+    }
+
+  - save & exit
+  - restart nginx
+    - sudo systemctl restart nginx  
