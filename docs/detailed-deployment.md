@@ -125,3 +125,163 @@ http://<your-public-ip>
 You should now see your deployed frontend app.
 
 ---
+
+
+Here's a more detailed and informative version of the deployment process:
+
+### Deploy Backend on AWS EC2
+
+1. **Clone the Backend Code:**
+   - SSH into your EC2 instance.
+   - Clone the repository containing the backend code:
+     ```bash
+     git clone <repo_url>
+     ```
+   
+2. **Navigate to the Project Directory:**
+   - Change to the project folder:
+     ```bash
+     cd <project_folder>
+     ```
+
+3. **Install Dependencies:**
+   - Install all the necessary dependencies:
+     ```bash
+     npm install
+     ```
+
+4. **Start the Application in Production Mode:**
+   - Start your application:
+     ```bash
+     npm start
+     ```
+   - Your app should now be running at `localhost:8080` on the EC2 instance. However, it will only run as long as the terminal is open.
+
+---
+
+### Handling Database Connection Issues (MongoDB)
+
+- If MongoDB is not connecting to the EC2 instance, update the network settings of MongoDB to allow access from your EC2 instance's IP address:
+  1. **Get the EC2 Instance Public IP:**
+     - Go to the **EC2 dashboard**, and click on the running **instance-id**.
+     - Find the **Public IPv4 address** under the instance details.
+     - Copy the IP address to use later.
+
+  2. **Update MongoDB Network Settings:**
+     - In MongoDB, go to the **Network Access** settings.
+     - Add the EC2 instance's public IP address to allow connections from that IP.
+
+---
+
+### Access the Backend Application
+
+- In your local setup, you might access the backend at `localhost:8080`. On the EC2 instance, you can try to access it with the EC2 public IP, e.g., `<copied_ip>:8080`.
+  
+  However, **it may not work** because the security group needs to allow inbound traffic on port 8080.
+
+---
+
+### Update Security Group to Allow Port 8080
+
+1. **Edit Inbound Rules for Security Group:**
+   - Go to **EC2** → **Security Groups**.
+   - Find the security group associated with your EC2 instance.
+   - Click on **Inbound Rules** and then **Edit Inbound Rules**.
+   - Add a new inbound rule:
+     - **Type**: Custom TCP
+     - **Port Range**: 8080
+     - **Source**: Anywhere (or specific IP address if you need more control)
+   - Click **Save rules**.
+
+Now, you should be able to access your backend at `http://<copied_ip>:8080`.
+
+---
+
+### Keeping the Backend Application Running in the Background
+
+#### Issue: Terminal Will Close the Application
+
+- By default, the application will stop running if you close the terminal or disconnect from SSH.
+
+#### Solution: Use PM2 to Keep the Application Running
+
+**PM2** is a process manager for Node.js applications that helps keep your application running in the background.
+
+1. **Install PM2:**
+   - Install PM2 globally:
+     ```bash
+     npm install pm2 -g
+     ```
+
+2. **Start the Application with PM2:**
+   - Start your application with PM2:
+     ```bash
+     pm2 start npm -- start
+     ```
+
+3. **Check Logs:**
+   - To view logs, use:
+     ```bash
+     pm2 logs
+     ```
+
+4. **Clear Logs:**
+   - To clear logs, run:
+     ```bash
+     pm2 flush <application_name>  # Example: pm2 flush npm
+     ```
+
+5. **Get Application Name:**
+   - To find your application name, use:
+     ```bash
+     pm2 list
+     ```
+
+6. **Managing the Application:**
+   - **Stop the application:**
+     ```bash
+     pm2 stop <application_name>
+     ```
+   - **Restart the application:**
+     ```bash
+     pm2 restart <application_name>
+     ```
+   - **Delete the application:**
+     ```bash
+     pm2 delete <application_name>
+     ```
+   - **Rename an application:**
+     First, stop the app and then:
+     ```bash
+     pm2 start <old_application_name> --name <new_application_name>
+     ```
+   - **Monitor the application:**
+     ```bash
+     pm2 monit
+     ```
+
+7. **Stopping All Applications:**
+   - To stop all running applications:
+     ```bash
+     pm2 stop all
+     ```
+
+8. **Deleting All Applications:**
+   - To delete all applications:
+     ```bash
+     pm2 delete all
+     ```
+
+---
+
+### Additional Notes
+
+- **Running the Application in the Background**:
+   - PM2 ensures that your application stays running even if the terminal session is closed or the server reboots. It is ideal for production environments where you need a process manager to handle crashes and restarts.
+
+- **Monitor Application Health**:
+   - You can monitor the health of your application and server using PM2's `monit` or other server monitoring tools like `htop` or `top`.
+
+By following these steps, you'll be able to deploy, manage, and monitor your backend application on AWS EC2 efficiently.
+
+

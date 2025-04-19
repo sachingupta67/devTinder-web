@@ -85,3 +85,58 @@ Note - if you want to see the info of machine then click on instance id
 
 
 
+
+
+### Deploy BE on aws 
+ -> will continue in same instance 
+ -> will clone first in the same instance 
+ -> go to folder
+ -> npm install
+ -> Production : npm start 
+
+Note : if database not connected , then in Mongo we need to Go to Network setting and update the IP address setting
+eg: we can allow IP of AWS 
+- go to instance 
+- click instance-id
+- look for Public IPv4 address
+- copy ip to access our web application
+- paste into mongo to access
+
+->Now we know in Local : localhost:8080 that was working for BE
+->Same we can check in the URL with following : <copied_ip>:8080
+-> but it will not run because we need to allow port 8080 in the security group
+-> go to security
+-> go to security group
+-> add inbound rule to allow access port number 8080 => click on edit inbound rule (with custom TCP)
+
+
+Note ::::
+-> Note application will only runing till the terminal is running
+-> if we close the terminal then application will stop running
+
+Solution : we need to run this into background
+
+# Get IP Instance which is running on which IP
+ -> curl ifconfig.me
+
+# How to run application in background
+ -> we need to use pm2 tool
+ -> its a deamon process manager , which keep your application running online 24/7
+ -> install this on server
+    - npm install pm2 -g
+    - pm2 start npm -- start
+
+# how to check logs 
+  - pm2 logs
+  - clear the logs : pm2 flush <application_name> eg:npm
+  - how to get <application_name>
+     - run=> pm2 list 
+  - change <application_name>
+  - how to stop => pm2 stop <application_name>
+  - how to restart => pm2 restart <application_name>
+  - how to delete => pm2 delete <application_name>
+  - how to update => [first stop] => pm2 start <old_application/current_application_name> --name <new_application_name>
+   Or [restart] => pm2 restart <old_application/current_application_name> --name <new_application_name>
+  - how to monitor => pm2 monit
+  - how to stop all => pm2 stop all
+  - how to delete all => pm2 delete all
