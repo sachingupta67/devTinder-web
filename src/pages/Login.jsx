@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+    const navigate=useNavigate();
   const [formData, setFormData] = useState({
     email: "sachin.gupta@gmail.com",
     password: "Scooby28@",
@@ -30,12 +32,16 @@ const Login = () => {
           emailId: formData.email,
           password: formData.password,
         },
-        withCredentials:true
+        withCredentials: true,
       });
 
       // Handle successful login
       //   localStorage.setItem("token", response.data.token);
       console.log("Login successful:", response.data);
+     return navigate("/profile");
+      // Redirect to a protected route or perform any other necessary actions
+      // For example, you can redirect the user to a dashboard or profile page
+      // using the history object or a routing librar
     } catch (err) {
       console.log(JSON.stringify(err));
       setError(err.response?.data?.message || "Something went wrong");
