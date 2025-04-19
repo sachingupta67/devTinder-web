@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-export const BASE_URL = 'http://16.16.183.51/api'
+// export const BASE_URL = 'http://16.16.183.51/api'
+export const BASE_URL = "/api" 
 // export const BASE_URL = "http://localhost:8080";
 const Login = () => {
   const navigate = useNavigate();

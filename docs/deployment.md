@@ -211,3 +211,11 @@ eg: FE => http://16.16.183.51/
   - save & exit
   - restart nginx
     - sudo systemctl restart nginx  
+
+  # If we refresh page it says 404 Non found
+  -
+
+  # Imp = FE & BE has same domain right then 
+    const BASE_URL = "/api"  it will take automatically 
+    eg: BASE_URL ="http://localhost:8080/api"
+        BASE_URL ="abc.com/api"
